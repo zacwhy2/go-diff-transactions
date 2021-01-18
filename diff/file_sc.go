@@ -9,18 +9,25 @@ import (
 	"time"
 )
 
-func ParseSc(fileName string) (map[string][][]string, error) {
-	f, err := os.Open(fileName)
+type scSource struct {
+}
+
+func (scSource scSource) String() string {
+	return "sc"
+}
+
+func (scSource scSource) parse(fileName string) (recordGroups, error) {
+	file, err := os.Open(fileName)
 
 	if err != nil {
 		return nil, err
 	}
 
-	defer f.Close()
+	defer file.Close()
 
-	m := make(map[string][][]string)
+	m := make(recordGroups)
 
-	reader := csv.NewReader(f)
+	reader := csv.NewReader(file)
 	reader.FieldsPerRecord = -1
 	reader.TrimLeadingSpace = true
 

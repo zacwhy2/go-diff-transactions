@@ -8,18 +8,25 @@ import (
 	"github.com/zacwhy/go-diff-transactions/array"
 )
 
-func ParseLocal(fileName string) (map[string][][]string, error) {
-	f, err := os.Open(fileName)
+type localSource struct {
+}
+
+func (localSource localSource) String() string {
+	return "local"
+}
+
+func (localSource localSource) parse(fileName string) (recordGroups, error) {
+	file, err := os.Open(fileName)
 
 	if err != nil {
 		return nil, err
 	}
 
-	defer f.Close()
+	defer file.Close()
 
-	m := make(map[string][][]string)
+	m := make(recordGroups)
 
-	reader := csv.NewReader(f)
+	reader := csv.NewReader(file)
 
 	var dateIndex int
 	var amountIndex int

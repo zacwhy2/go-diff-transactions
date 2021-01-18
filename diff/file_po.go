@@ -9,18 +9,25 @@ import (
 	"time"
 )
 
-func ParsePo(fileName string) (map[string][][]string, error) {
-	f, err := os.Open(fileName)
+type poSource struct {
+}
+
+func (poSource poSource) String() string {
+	return "po"
+}
+
+func (poSource poSource) parse(fileName string) (recordGroups, error) {
+	file, err := os.Open(fileName)
 
 	if err != nil {
 		return nil, err
 	}
 
-	defer f.Close()
+	defer file.Close()
 
-	m := make(map[string][][]string)
+	m := make(recordGroups)
 
-	reader := csv.NewReader(f)
+	reader := csv.NewReader(file)
 	reader.FieldsPerRecord = -1
 
 	re := regexp.MustCompile(`S\$(\d{1,}.\d{2})`)

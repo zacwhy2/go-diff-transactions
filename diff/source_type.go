@@ -2,29 +2,34 @@ package diff
 
 import (
 	"bufio"
+	"errors"
 	"os"
 	"strings"
 
 	"github.com/zacwhy/go-diff-transactions/array"
 )
 
-func detectSourceType(fileName string) (string, error) {
-	f, err := os.Open(fileName)
+type source interface {
+	parse(fileName string) (recordGroups, error)
+}
+
+func detectSource(fileName string) (source, error) {
+	file, err := os.Open(fileName)
 
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	defer f.Close()
+	defer file.Close()
 
-	scanner := bufio.NewScanner(f)
+	scanner := bufio.NewScanner(file)
 
 	for i := 0; scanner.Scan(); i++ {
 		text := scanner.Text()
 
 		if i == 0 {
 			if text == `"Transaction Date","Description","Amount"` {
-				return "po", nil
+				return poSource{}, nil
 			}
 
 			headers := strings.Split(text, ",")
@@ -33,30 +38,18 @@ func detectSourceType(fileName string) (string, error) {
 			descriptionIndex := array.IndexOf("c", headers)
 
 			if dateIndex != -1 && amountIndex != -1 && descriptionIndex != -1 {
-				return "local", nil
+				return localSource{}, nil
 			}
 		}
 
 		if i == 4 && text == "Date,DESCRIPTION,Foreign Currency Amount,SGD Amount" {
-			return "sc", nil
+			return scSource{}, nil
 		}
 	}
 
 	if err := scanner.Err(); err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return "", nil
-}
-
-func parser(sourceType string) func(string) (map[string][][]string, error) {
-	switch sourceType {
-	case "local":
-		return ParseLocal
-	case "po":
-		return ParsePo
-	case "sc":
-		return ParseSc
-	}
-	return nil
+	return nil, errors.New("cannot detect source type for: " + fileName)
 }

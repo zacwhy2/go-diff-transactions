@@ -5,28 +5,28 @@ import (
 	"sort"
 )
 
+type recordGroups map[string][][]string
+
 func PrintDiff(leftFileName, rightFileName string) {
-	leftSourceType, err := detectSourceType(leftFileName)
+	leftSource, err := detectSource(leftFileName)
 	check(err)
 
-	rightSourceType, err := detectSourceType(rightFileName)
+	rightSource, err := detectSource(rightFileName)
 	check(err)
 
-	leftParse := parser(leftSourceType)
-	left, err := leftParse(leftFileName)
+	left, err := leftSource.parse(leftFileName)
 	check(err)
 
-	rightParse := parser(rightSourceType)
-	right, err := rightParse(rightFileName)
+	right, err := rightSource.parse(rightFileName)
 	check(err)
 
-	fmt.Println(leftSourceType, "vs", rightSourceType)
+	fmt.Println(leftSource, "<>", rightSource)
 
 	findDiff("<", left, right)
 	findDiff(">", right, left)
 }
 
-func findDiff(prefix string, left, right map[string][][]string) {
+func findDiff(prefix string, left, right recordGroups) {
 	var keys []string
 	for k := range left {
 		keys = append(keys, k)

@@ -22,24 +22,31 @@ func PrintDiff(leftFileName, rightFileName string) {
 
 	fmt.Println(leftSource, "<>", rightSource)
 
-	findDiff("<", left, right)
-	findDiff(">", right, left)
+	leftDiffKeys := findDiff(left, right)
+	printRecords("<", leftDiffKeys, left)
+
+	rightDiffKeys := findDiff(right, left)
+	printRecords(">", rightDiffKeys, right)
 }
 
-func findDiff(prefix string, left, right recordGroups) {
+func findDiff(left, right recordGroups) []string {
 	var keys []string
-	for k := range left {
-		keys = append(keys, k)
-	}
-	sort.Strings(keys)
 
-	for _, key := range keys {
-		leftRows := left[key]
+	for key, leftRows := range left {
 		rightRows, ok := right[key]
 		if !ok || len(leftRows) != len(rightRows) {
-			for i, row := range leftRows {
-				fmt.Println(prefix, key, i, row)
-			}
+			keys = append(keys, key)
+		}
+	}
+
+	sort.Strings(keys)
+	return keys
+}
+
+func printRecords(prefix string, keys []string, recordGroups recordGroups) {
+	for _, key := range keys {
+		for i, row := range recordGroups[key] {
+			fmt.Printf("%v [%v][%v] %v\n", prefix, key, i, row)
 		}
 	}
 }

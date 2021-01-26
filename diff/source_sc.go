@@ -44,7 +44,7 @@ func (scSource scSource) parse(fileName string) (recordGroups, error) {
 			return nil, err
 		}
 
-		if i < 5 {
+		if i < 4 {
 			continue
 		}
 

@@ -20,11 +20,11 @@ func PrintDiff(leftFileName, rightFileName string) {
 	right, err := rightSource.parse(rightFileName)
 	check(err)
 
-	fmt.Println(leftSource, "<>", rightSource)
-
+	fmt.Println(leftSource)
 	leftDiffKeys := findDiff(left, right)
 	printRecords("<", leftDiffKeys, left)
 
+	fmt.Println(rightSource)
 	rightDiffKeys := findDiff(right, left)
 	printRecords(">", rightDiffKeys, right)
 }

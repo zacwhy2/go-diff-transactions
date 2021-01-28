@@ -30,7 +30,7 @@ func (poSource poSource) parse(fileName string) (recordGroups, error) {
 	reader := csv.NewReader(file)
 	reader.FieldsPerRecord = -1
 
-	re := regexp.MustCompile(`S\$(\d{1,}.\d{2})`)
+	re := regexp.MustCompile(`^S\$(\d{1,}.\d{2})`)
 
 	for i := 0; ; i++ {
 		record, err := reader.Read()

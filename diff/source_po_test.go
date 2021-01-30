@@ -2,20 +2,20 @@ package diff
 
 import "testing"
 
-func TestDiffLocalVsPo(t *testing.T) {
-	localRecordGroups, err := localSource{}.parse("testdata/po/local.csv")
+func TestDiffPoVsLocal(t *testing.T) {
+	poRecordGroups, err := poSource{}.parse("testdata/po.csv")
 
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	poRecordGroups, err := poSource{}.parse("testdata/po/remote.csv")
+	localRecordGroups, err := localSource{}.parse("testdata/local.csv")
 
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	leftDiffKeys := findDiff(localRecordGroups, poRecordGroups)
+	leftDiffKeys := findDiff(poRecordGroups, localRecordGroups)
 
 	{
 		want := 1
@@ -33,7 +33,7 @@ func TestDiffLocalVsPo(t *testing.T) {
 		}
 	}
 
-	rightDiffKeys := findDiff(poRecordGroups, localRecordGroups)
+	rightDiffKeys := findDiff(localRecordGroups, poRecordGroups)
 
 	{
 		want := 1

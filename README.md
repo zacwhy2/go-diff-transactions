@@ -1,4 +1,6 @@
-# Getting started
+# go diff transactions
+
+## Getting started
 
 ```sh
 $ go build
@@ -19,4 +21,11 @@ po
 < [2020-01-02 100][0] [02 Jan 2020 po only S$1.00]
 local
 > [2020-01-03 100][0] [2020-01-03 100 local only]
+```
+
+## Development
+
+Install `git gofmt pre-commit hook` to make sure Go files are formatted with gofmt before commits.
+```sh
+$ git config core.hooksPath hooks
 ```

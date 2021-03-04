@@ -48,7 +48,6 @@ func (scSource scSource) parse(fileName string) (recordGroups, error) {
 			continue
 		}
 
-		// TODO
 		if record[0] == "Current Balance" {
 			break
 		}

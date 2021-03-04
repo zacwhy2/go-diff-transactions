@@ -25,11 +25,9 @@ func (localSource localSource) parse(fileName string) (recordGroups, error) {
 	defer file.Close()
 
 	m := make(recordGroups)
-
 	reader := csv.NewReader(file)
 
-	var dateIndex int
-	var amountIndex int
+	var dateIndex, amountIndex int
 
 	for i := 0; ; i++ {
 		record, err := reader.Read()
@@ -52,9 +50,7 @@ func (localSource localSource) parse(fileName string) (recordGroups, error) {
 		amount := record[amountIndex]
 		key := date + " " + amount
 
-		_, ok := m[key]
-
-		if !ok {
+		if _, ok := m[key]; !ok {
 			m[key] = [][]string{}
 		}
 

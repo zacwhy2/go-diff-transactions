@@ -33,6 +33,10 @@ func detectSource(fileName string) (source, error) {
 				return poSource{}, nil
 			}
 
+			if text == `"Transaction Date/Time","Amount","Merchant Name"` {
+				return ezSource{}, nil
+			}
+
 			headers := strings.Split(text, ",")
 			dateIndex := array.IndexOf("d", headers)
 			amountIndex := array.IndexOf("a", headers)

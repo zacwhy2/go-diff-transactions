@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/extrame/xls"
 	"github.com/zacwhy/go-diff-transactions/array"
 )
 
@@ -51,5 +52,48 @@ func detectSource(fileName string) (source, error) {
 		return nil, err
 	}
 
+	if source, err := tryXlsFile(fileName); err == nil {
+		return source, nil
+	}
+
 	return nil, errors.New("cannot detect source type for: " + fileName)
+}
+
+func tryXlsFile(fileName string) (source, error) {
+	workBook, err := xls.Open(fileName, "utf-8")
+
+	if err != nil {
+		return nil, err
+	}
+
+	return tryUoXlsFile(workBook)
+}
+
+func tryUoXlsFile(workBook *xls.WorkBook) (source, error) {
+	sheet := workBook.GetSheet(0)
+
+	if sheet == nil {
+		return nil, errors.New("no worksheet")
+	}
+
+	if sheet.MaxRow < 9 {
+		return nil, errors.New("no headers")
+	}
+
+	row := sheet.Row(9)
+
+	isUo := row != nil &&
+		row.Col(0) == "Transaction Date" &&
+		row.Col(1) == "Posting Date" &&
+		row.Col(2) == "Description" &&
+		row.Col(3) == "Foreign Currency Type" &&
+		row.Col(4) == "Transaction Amount(Foreign)" &&
+		row.Col(5) == "Local Currency Type" &&
+		row.Col(6) == "Transaction Amount(Local)"
+
+	if !isUo {
+		return nil, errors.New("headers do not match")
+	}
+
+	return uoSource{}, nil
 }

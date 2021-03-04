@@ -18,19 +18,19 @@ func (uoSource uoSource) String() string {
 }
 
 func (uoSource uoSource) parse(fileName string) (recordGroups, error) {
-	xlFile, err := xls.Open(fileName, "utf-8")
+	workBook, err := xls.Open(fileName, "utf-8")
 
 	if err != nil {
 		return nil, err
 	}
 
-	sheet1 := xlFile.GetSheet(0)
+	sheet := workBook.GetSheet(0)
 
-	if sheet1 == nil {
+	if sheet == nil {
 		return nil, errors.New("no worksheet")
 	}
 
-	rows := excel.ReadRows(sheet1)
+	rows := excel.ReadRows(sheet)
 
 	return parseArray(rows)
 }

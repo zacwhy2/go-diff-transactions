@@ -39,11 +39,11 @@ func findDiff(left, right recordGroups) []string {
 		}
 	}
 
-	sort.Strings(keys)
 	return keys
 }
 
 func printRecords(prefix string, keys []string, recordGroups recordGroups) {
+	sort.Strings(keys)
 	for _, key := range keys {
 		for i, row := range recordGroups[key] {
 			fmt.Printf("%v [%v][%v] %v\n", prefix, key, i, row)

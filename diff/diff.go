@@ -7,6 +7,7 @@ import (
 
 type recordGroups map[string][][]string
 
+// PrintDiff prints the difference between two sources
 func PrintDiff(leftFileName, rightFileName string) {
 	leftSource, err := detectSource(leftFileName)
 	check(err)

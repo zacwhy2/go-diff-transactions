@@ -2,6 +2,7 @@ package xls
 
 import "github.com/extrame/xls"
 
+// ReadRows reads all rows in a worksheet
 func ReadRows(sheet *xls.WorkSheet) [][]string {
 	rows := make([][]string, sheet.MaxRow+1)
 

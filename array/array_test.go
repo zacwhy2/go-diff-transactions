@@ -1,24 +1,28 @@
 package array
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestIndexOf(t *testing.T) {
-	tests := []struct {
+	tests := map[string]struct {
 		element string
 		data    []string
 		want    int
 	}{
-		{"a", []string{}, -1},
-		{"a", []string{"a", "b", "c"}, 0},
-		{"b", []string{"a", "b", "c"}, 1},
-		{"c", []string{"a", "b", "c"}, 2},
-		{"d", []string{"a", "b", "c"}, -1},
+		"empty array":        {"a", []string{}, -1},
+		"element at index 0": {"a", []string{"a", "b", "c"}, 0},
+		"element at index 1": {"b", []string{"a", "b", "c"}, 1},
+		"element at index 2": {"c", []string{"a", "b", "c"}, 2},
+		"element not found":  {"d", []string{"a", "b", "c"}, -1},
 	}
 
-	for _, tt := range tests {
-		got := IndexOf(tt.element, tt.data)
-		if got != tt.want {
-			t.Errorf("IndexOf(%v, %v) = %v; want %v", tt.element, tt.data, got, tt.want)
-		}
+	for name, tt := range tests {
+		t.Run(name, func(t *testing.T) {
+			got := IndexOf(tt.element, tt.data)
+			if got != tt.want {
+				t.Errorf("IndexOf(%v, %v) = %v; want %v", tt.element, tt.data, got, tt.want)
+			}
+		})
 	}
 }

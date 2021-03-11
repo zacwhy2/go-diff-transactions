@@ -6,16 +6,16 @@ import (
 
 func TestParseArray(t *testing.T) {
 	cells := [][]string{
-		[]string{"Lorem Ipsum"},
-		[]string{},
-		[]string{"Account Statement Details"},
-		[]string{},
-		[]string{"Account Number:", "1234567890123456", "SGD"},
-		[]string{"Account Type:", ""},
-		[]string{"Statement Date:", "01 Feb 2020"},
-		[]string{"Statement Balance:", "2.00", "SGD"},
-		[]string{},
-		[]string{
+		{"Lorem Ipsum"},
+		{},
+		{"Account Statement Details"},
+		{},
+		{"Account Number:", "1234567890123456", "SGD"},
+		{"Account Type:", ""},
+		{"Statement Date:", "01 Feb 2020"},
+		{"Statement Balance:", "2.00", "SGD"},
+		{},
+		{
 			"Transaction Date",
 			"Posting Date",
 			"Description",
@@ -24,17 +24,17 @@ func TestParseArray(t *testing.T) {
 			"Local Currency Type",
 			"Transaction Amount(Local)",
 		},
-		[]string{},
-		[]string{"01 Jan 2020", "01 Jan 2020", "both", "", "", "SGD", "1.00"},
-		[]string{"02 Jan 2020", "02 Jan 2020", "uo only", "", "", "SGD", "1.00"},
+		{},
+		{"01 Jan 2020", "01 Jan 2020", "both", "", "", "SGD", "1.00"},
+		{"02 Jan 2020", "02 Jan 2020", "uo only", "", "", "SGD", "1.00"},
 	}
 
 	want := map[string][][]string{
-		"2020-01-01 100": [][]string{
-			[]string{"01 Jan 2020", "1.00", "both"},
+		"2020-01-01 100": {
+			{"01 Jan 2020", "1.00", "both"},
 		},
-		"2020-01-02 100": [][]string{
-			[]string{"02 Jan 2020", "1.00", "uo only"},
+		"2020-01-02 100": {
+			{"02 Jan 2020", "1.00", "uo only"},
 		},
 	}
 

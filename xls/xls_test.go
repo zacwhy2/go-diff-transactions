@@ -9,8 +9,8 @@ import (
 
 func TestReadRows(t *testing.T) {
 	want := [][]string{
-		[]string{"a1", "b1", ""},
-		[]string{"a2", "b2", ""},
+		{"a1", "b1", ""},
+		{"a2", "b2", ""},
 	}
 
 	workBook, err := xls.Open("testdata/sample.xls", "utf-8")

@@ -1,8 +1,11 @@
 package diff
 
 import (
+	"errors"
 	"fmt"
+	"math/big"
 	"sort"
+	"strings"
 )
 
 type recordGroups map[string][][]string
@@ -46,8 +49,18 @@ func findDiff(left, right recordGroups) []string {
 func printRecords(prefix string, keys []string, recordGroups recordGroups) {
 	sort.Strings(keys)
 	for _, key := range keys {
+		s := strings.Split(key, " ")
+		date := s[0]
+
+		cents, ok := new(big.Rat).SetString(s[1])
+		if !ok {
+			check(errors.New("error with record amount"))
+		}
+		dollar := cents.Quo(cents, big.NewRat(100, 1))
+		amount := dollar.FloatString(2)
+
 		for i, row := range recordGroups[key] {
-			fmt.Printf("%v [%v][%v] %v\n", prefix, key, i, row)
+			fmt.Printf("%v %v $%v #%v %v\n", prefix, date, amount, i+1, row)
 		}
 	}
 }

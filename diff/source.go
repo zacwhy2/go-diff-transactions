@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/extrame/xls"
@@ -37,18 +38,24 @@ func detectSource(fileName string) (source, error) {
 				return ezSource{}, nil
 			}
 
+			re := regexp.MustCompile(`^[0-9]{2}/[0-9]{2}/[0-9]{1,},.+ [0-9]{2}/[0-9]{2}/[0-9]{1,} •••• •••• •••• [0-9]{4} -[0-9]{1,}\.[0-9]{2} SGD,-[0-9]{1,}\.[0-9]{2}`)
+			if re.MatchString(text) {
+				return hsSource{}, nil
+			}
+
 			headers := strings.Split(text, ",")
 			dateIndex := array.IndexOf("d", headers)
 			amountIndex := array.IndexOf("a", headers)
 			descriptionIndex := array.IndexOf("c", headers)
-
 			if dateIndex != -1 && amountIndex != -1 && descriptionIndex != -1 {
 				return localSource{}, nil
 			}
 		}
 
-		if i == 4 && text == "Date,DESCRIPTION,Foreign Currency Amount,SGD Amount" {
-			return scSource{}, nil
+		if i == 4 {
+			if text == "Date,DESCRIPTION,Foreign Currency Amount,SGD Amount" {
+				return scSource{}, nil
+			}
 		}
 	}
 
